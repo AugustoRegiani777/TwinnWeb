@@ -1097,24 +1097,30 @@ li {
 .vianda-expand-btn {
   display: inline-flex;
   align-items: center;
-  gap: 0.25rem;
-  margin-top: 0.28rem;
-  padding: 0;
-  background: none;
-  color: rgba(255, 248, 239, 0.42);
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  transition: color 0.18s ease;
+  gap: 0.3rem;
+  margin-top: 0.35rem;
+  padding: 0.28rem 0.65rem 0.28rem 0.5rem;
+  background: rgba(255, 248, 239, 0.08);
+  border: 1px solid rgba(255, 248, 239, 0.16);
+  border-radius: 999px;
+  color: rgba(255, 248, 239, 0.88);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
   cursor: pointer;
 }
 
 .vianda-expand-btn:hover {
-  color: rgba(255, 248, 239, 0.78);
+  background: rgba(255, 248, 239, 0.14);
+  color: #fff;
+  border-color: rgba(255, 248, 239, 0.28);
 }
 
 .vianda-expand-btn.is-open {
-  color: var(--green);
+  background: rgba(54, 173, 50, 0.18);
+  border-color: rgba(54, 173, 50, 0.42);
+  color: #7ee87a;
 }
 
 /* Panel expandible de sabores */
