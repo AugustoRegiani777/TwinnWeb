@@ -126,27 +126,27 @@
             <article class="vianda-slide is-active" data-categoria="premium">
               <img src="assets/viandas-premium.jpeg" alt="Menu de viandas de Twins con lasagna, colita de cuadril, milanesa napolitana y platos elaborados">
               <div class="vianda-slide-overlay">
-                <a class="btn btn-vianda-wa" href="https://wa.me/541159478705?text=Hola%20Twins%2C%20quiero%20informaci%C3%B3n%20sobre%20las%20viandas%20Especiales." target="_blank" rel="noopener noreferrer" aria-label="Consultar viandas Especiales por WhatsApp">
+                <button class="btn btn-vianda-wa" type="button" data-vianda="premium" aria-label="Armar pedido de viandas Especiales">
                   Pedir viandas Especiales
-                </a>
+                </button>
               </div>
             </article>
 
             <article class="vianda-slide is-next" data-categoria="light">
               <img src="assets/viandas-light.jpeg" alt="Menu de viandas light de Twins con pechuga al limon, berenjenas asadas, medallon de zapallito y ensaladas">
               <div class="vianda-slide-overlay">
-                <a class="btn btn-vianda-wa" href="https://wa.me/541159478705?text=Hola%20Twins%2C%20quiero%20informaci%C3%B3n%20sobre%20las%20viandas%20Light." target="_blank" rel="noopener noreferrer" aria-label="Consultar viandas Light por WhatsApp">
+                <button class="btn btn-vianda-wa" type="button" data-vianda="light" aria-label="Armar pedido de viandas Light">
                   Pedir viandas Light
-                </a>
+                </button>
               </div>
             </article>
 
             <article class="vianda-slide is-prev" data-categoria="classic">
               <img src="assets/viandas-classic.jpeg" alt="Menu de viandas classic de Twins con milanesa, pastel de papas, arroz con pollo y platos tradicionales">
               <div class="vianda-slide-overlay">
-                <a class="btn btn-vianda-wa" href="https://wa.me/541159478705?text=Hola%20Twins%2C%20quiero%20informaci%C3%B3n%20sobre%20las%20viandas%20Classic." target="_blank" rel="noopener noreferrer" aria-label="Consultar viandas Classic por WhatsApp">
+                <button class="btn btn-vianda-wa" type="button" data-vianda="classic" aria-label="Armar pedido de viandas Classic">
                   Pedir viandas Classic
-                </a>
+                </button>
               </div>
             </article>
           </div>
@@ -247,6 +247,68 @@
       <span>Sabor que cuida, calidad que se comparte.</span>
     </div>
   </footer>
+
+  <!-- Modal pedido de viandas -->
+  <div class="vianda-modal-overlay" id="viandaModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="viandaModalTitle">
+    <div class="vianda-modal">
+      <button class="vianda-modal-close" type="button" aria-label="Cerrar">&#x2715;</button>
+
+      <div class="vianda-modal-header">
+        <p class="eyebrow">Tu pedido</p>
+        <h2 id="viandaModalTitle">Armá tu semana</h2>
+        <p class="vianda-modal-sub">Sumá las viandas que necesitás de cada línea. Mínimo 5 en total.</p>
+      </div>
+
+      <div class="vianda-qty-list">
+        <div class="vianda-qty-row" data-tipo="premium">
+          <div class="vianda-qty-info">
+            <strong>Especiales</strong>
+            <span>Platos elaborados, proteínas nobles</span>
+          </div>
+          <div class="vianda-qty-controls">
+            <button class="vianda-qty-btn" type="button" data-action="minus" aria-label="Restar Especiales">&#x2212;</button>
+            <span class="vianda-qty-value" aria-live="polite">0</span>
+            <button class="vianda-qty-btn" type="button" data-action="plus" aria-label="Sumar Especiales">&#x2B;</button>
+          </div>
+        </div>
+
+        <div class="vianda-qty-row" data-tipo="light">
+          <div class="vianda-qty-info">
+            <strong>Light</strong>
+            <span>Bajas en calorías, alta nutrición</span>
+          </div>
+          <div class="vianda-qty-controls">
+            <button class="vianda-qty-btn" type="button" data-action="minus" aria-label="Restar Light">&#x2212;</button>
+            <span class="vianda-qty-value" aria-live="polite">0</span>
+            <button class="vianda-qty-btn" type="button" data-action="plus" aria-label="Sumar Light">&#x2B;</button>
+          </div>
+        </div>
+
+        <div class="vianda-qty-row" data-tipo="classic">
+          <div class="vianda-qty-info">
+            <strong>Classic</strong>
+            <span>Los clásicos de siempre</span>
+          </div>
+          <div class="vianda-qty-controls">
+            <button class="vianda-qty-btn" type="button" data-action="minus" aria-label="Restar Classic">&#x2212;</button>
+            <span class="vianda-qty-value" aria-live="polite">0</span>
+            <button class="vianda-qty-btn" type="button" data-action="plus" aria-label="Sumar Classic">&#x2B;</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="vianda-modal-footer">
+        <div class="vianda-total-row">
+          <span>Total</span>
+          <strong class="vianda-total-value">0 viandas</strong>
+        </div>
+        <p class="vianda-min-note" id="viandaMinNote">Faltan al menos 5 viandas para confirmar el pedido.</p>
+        <button class="btn btn-vianda-confirmar" type="button" id="viandaConfirmar" disabled>
+          Enviar pedido por WhatsApp
+        </button>
+      </div>
+    </div>
+  </div>
 
   <script src="script.js" defer></script>
 </body>
