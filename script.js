@@ -86,106 +86,111 @@ const VIANDA_SABORES = {
   ],
 };
 
-const viandaModal = document.getElementById("viandaModal");
-const viandaQtyRows = viandaModal ? Array.from(viandaModal.querySelectorAll(".vianda-qty-row")) : [];
-const viandaTotalEl = viandaModal ? viandaModal.querySelector(".vianda-total-value") : null;
-const viandaMinNote = document.getElementById("viandaMinNote");
-const viandaContinuarBtn = document.getElementById("viandaContinuar");
-const viandaConfirmarBtn = document.getElementById("viandaConfirmar");
-const viandaVolverBtn = document.getElementById("viandaVolver");
-const viandaStep1 = document.getElementById("viandaStep1");
-const viandaStep2 = document.getElementById("viandaStep2");
-const viandaSaboresList = document.getElementById("viandaSaboresList");
-const stepIndicators = viandaModal ? Array.from(viandaModal.querySelectorAll("[data-step-indicator]")) : [];
+// quantities[tipo].base = porciones sin especificar
+// quantities[tipo].sabores = { "nombre sabor": cantidad }
+const quantities = {
+  premium: { base: 0, sabores: {} },
+  light:   { base: 0, sabores: {} },
+  classic: { base: 0, sabores: {} },
+};
 
-const quantities = { premium: 0, light: 0, classic: 0 };
-
-function updateStep1() {
-  let total = 0;
-  viandaQtyRows.forEach((row) => {
-    const tipo = row.dataset.tipo;
-    const qty = quantities[tipo];
-    row.querySelector(".vianda-qty-value").textContent = qty;
-    row.querySelector("[data-action='minus']").disabled = qty <= 0;
-    total += qty;
-  });
-  if (viandaTotalEl) {
-    viandaTotalEl.textContent = total + (total === 1 ? " vianda" : " viandas");
-  }
-  const valid = total >= 5;
-  if (viandaMinNote) viandaMinNote.classList.toggle("is-hidden", valid);
-  if (viandaContinuarBtn) viandaContinuarBtn.disabled = !valid;
+function categoryTotal(tipo) {
+  const saborSum = Object.values(quantities[tipo].sabores).reduce((a, b) => a + b, 0);
+  return quantities[tipo].base + saborSum;
 }
 
-function setStep(n) {
-  stepIndicators.forEach((el) => {
-    el.classList.toggle("is-active", Number(el.dataset.stepIndicator) === n);
-  });
-  if (n === 1) {
-    viandaStep1.hidden = false;
-    viandaStep2.hidden = true;
-  } else {
-    buildSaboresUI();
-    viandaStep1.hidden = true;
-    viandaStep2.hidden = false;
-    viandaModal.querySelector(".vianda-modal").scrollTop = 0;
-  }
+function grandTotal() {
+  return ["premium", "light", "classic"].reduce((sum, t) => sum + categoryTotal(t), 0);
 }
 
-function buildSaboresUI() {
-  if (!viandaSaboresList) return;
-  viandaSaboresList.innerHTML = "";
-  Object.entries(quantities)
-    .filter(([, q]) => q > 0)
-    .forEach(([tipo, qty]) => {
-      const section = document.createElement("div");
-      section.className = "vianda-sabores-section";
+function refreshModal() {
+  const total = grandTotal();
 
-      const header = document.createElement("div");
-      header.className = "vianda-sabores-header";
-      header.innerHTML = `<strong>${VIANDA_LABELS[tipo]}</strong><span class="vianda-sabores-badge">${qty} vianda${qty > 1 ? "s" : ""}</span>`;
-      section.appendChild(header);
+  ["premium", "light", "classic"].forEach((tipo) => {
+    const block = viandaModal.querySelector(`.vianda-category-block[data-tipo="${tipo}"]`);
+    if (!block) return;
+    const catTotal = categoryTotal(tipo);
+    block.querySelector(".vianda-qty-value").textContent = catTotal;
+    block.querySelector("[data-action='minus']").disabled = quantities[tipo].base <= 0;
 
-      const items = document.createElement("div");
-      items.className = "vianda-sabores-items";
-
-      VIANDA_SABORES[tipo].forEach((sabor, i) => {
-        const id = `sabor-${tipo}-${i}`;
-        const label = document.createElement("label");
-        label.className = "vianda-sabor-item";
-        label.htmlFor = id;
-        label.innerHTML = `<input type="checkbox" id="${id}" data-tipo="${tipo}" value="${sabor}"><span>${sabor}</span>`;
-        items.appendChild(label);
+    // Actualizar contadores de sabores en el panel expandido
+    const panel = block.querySelector(".vianda-expand-panel");
+    if (panel && !panel.hidden) {
+      panel.querySelectorAll(".vianda-sabor-row").forEach((row) => {
+        const sabor = row.dataset.sabor;
+        const qty = quantities[tipo].sabores[sabor] || 0;
+        row.querySelector(".vianda-qty-value-sm").textContent = qty;
+        row.querySelector("[data-action='minus']").disabled = qty <= 0;
       });
+    }
+  });
 
-      section.appendChild(items);
-      viandaSaboresList.appendChild(section);
+  viandaTotalEl.textContent = total + (total === 1 ? " vianda" : " viandas");
+  const valid = total >= 5;
+  viandaMinNote.classList.toggle("is-hidden", valid);
+  viandaConfirmarBtn.disabled = !valid;
+}
+
+function buildExpandPanel(panel, tipo) {
+  if (panel.dataset.built) return;
+  panel.dataset.built = "1";
+  VIANDA_SABORES[tipo].forEach((sabor) => {
+    const row = document.createElement("div");
+    row.className = "vianda-sabor-row";
+    row.dataset.sabor = sabor;
+    row.innerHTML =
+      `<span class="vianda-sabor-name">${sabor}</span>` +
+      `<div class="vianda-qty-controls-sm">` +
+      `<button class="vianda-qty-btn-sm" type="button" data-action="minus" aria-label="Restar ${sabor}">&#x2212;</button>` +
+      `<span class="vianda-qty-value-sm">0</span>` +
+      `<button class="vianda-qty-btn-sm" type="button" data-action="plus" aria-label="Sumar ${sabor}">&#x2B;</button>` +
+      `</div>`;
+
+    row.querySelector("[data-action='plus']").addEventListener("click", () => {
+      quantities[tipo].sabores[sabor] = (quantities[tipo].sabores[sabor] || 0) + 1;
+      refreshModal();
     });
+    row.querySelector("[data-action='minus']").addEventListener("click", () => {
+      if ((quantities[tipo].sabores[sabor] || 0) > 0) {
+        quantities[tipo].sabores[sabor]--;
+        refreshModal();
+      }
+    });
+    panel.appendChild(row);
+  });
 }
 
 function buildWhatsAppMsg() {
-  const total = Object.values(quantities).reduce((a, b) => a + b, 0);
-  const partes = Object.entries(quantities)
-    .filter(([, q]) => q > 0)
-    .map(([tipo, q]) => {
-      const checkboxes = viandaSaboresList
-        ? Array.from(viandaSaboresList.querySelectorAll(`input[type="checkbox"][data-tipo="${tipo}"]:checked`))
-        : [];
-      const saboresStr = checkboxes.length
-        ? ` (${checkboxes.map((cb) => cb.value).join(", ")})`
-        : "";
-      return `${VIANDA_LABELS[tipo]}: ${q}${saboresStr}`;
+  const total = grandTotal();
+  const partes = ["premium", "light", "classic"]
+    .filter((tipo) => categoryTotal(tipo) > 0)
+    .map((tipo) => {
+      const catTotal = categoryTotal(tipo);
+      const especificados = Object.entries(quantities[tipo].sabores)
+        .filter(([, q]) => q > 0)
+        .map(([sabor, q]) => `${sabor} ×${q}`);
+      const base = quantities[tipo].base;
+      if (base > 0) especificados.push(`sin especificar ×${base}`);
+      const detalle = especificados.length ? ` (${especificados.join(", ")})` : "";
+      return `${VIANDA_LABELS[tipo]}: ${catTotal}${detalle}`;
     });
   return `Hola Twins, quiero hacer un pedido de viandas semanales: ${partes.join("; ")}. Total: ${total} viandas.`;
 }
 
+const viandaModal = document.getElementById("viandaModal");
+const viandaTotalEl = viandaModal ? viandaModal.querySelector(".vianda-total-value") : null;
+const viandaMinNote = document.getElementById("viandaMinNote");
+const viandaConfirmarBtn = document.getElementById("viandaConfirmar");
+
 function openViandaModal(tipoDestacado) {
-  Object.keys(quantities).forEach((k) => (quantities[k] = 0));
-  viandaQtyRows.forEach((row) => {
-    row.classList.toggle("is-destacado", row.dataset.tipo === tipoDestacado);
+  ["premium", "light", "classic"].forEach((t) => {
+    quantities[t].base = 0;
+    quantities[t].sabores = {};
   });
-  updateStep1();
-  setStep(1);
+  viandaModal.querySelectorAll(".vianda-category-block").forEach((block) => {
+    block.classList.toggle("is-destacado", block.dataset.tipo === tipoDestacado);
+  });
+  refreshModal();
   viandaModal.removeAttribute("aria-hidden");
   viandaModal.classList.add("is-open");
   document.body.style.overflow = "hidden";
@@ -203,44 +208,40 @@ if (viandaModal) {
   });
 
   viandaModal.querySelector(".vianda-modal-close").addEventListener("click", closeViandaModal);
-
-  viandaModal.addEventListener("click", (e) => {
-    if (e.target === viandaModal) closeViandaModal();
-  });
-
+  viandaModal.addEventListener("click", (e) => { if (e.target === viandaModal) closeViandaModal(); });
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape" && viandaModal.classList.contains("is-open")) closeViandaModal();
   });
 
-  viandaQtyRows.forEach((row) => {
-    const tipo = row.dataset.tipo;
-    row.querySelectorAll(".vianda-qty-btn").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        if (btn.dataset.action === "plus") {
-          quantities[tipo]++;
-        } else if (btn.dataset.action === "minus" && quantities[tipo] > 0) {
-          quantities[tipo]--;
-        }
-        updateStep1();
-      });
+  // Controles principales de cada categoría (base)
+  viandaModal.querySelectorAll(".vianda-category-block").forEach((block) => {
+    const tipo = block.dataset.tipo;
+
+    block.querySelector("[data-action='plus']").addEventListener("click", () => {
+      quantities[tipo].base++;
+      refreshModal();
+    });
+    block.querySelector("[data-action='minus']").addEventListener("click", () => {
+      if (quantities[tipo].base > 0) { quantities[tipo].base--; refreshModal(); }
+    });
+
+    // Expand/colapsar sabores
+    const expandBtn = block.querySelector(".vianda-expand-btn");
+    const panel = block.querySelector(".vianda-expand-panel");
+    expandBtn.addEventListener("click", () => {
+      const open = !panel.hidden;
+      panel.hidden = open;
+      expandBtn.setAttribute("aria-expanded", String(!open));
+      expandBtn.classList.toggle("is-open", !open);
+      if (!open) buildExpandPanel(panel, tipo);
     });
   });
 
-  if (viandaContinuarBtn) {
-    viandaContinuarBtn.addEventListener("click", () => setStep(2));
-  }
-
-  if (viandaVolverBtn) {
-    viandaVolverBtn.addEventListener("click", () => setStep(1));
-  }
-
-  if (viandaConfirmarBtn) {
-    viandaConfirmarBtn.addEventListener("click", () => {
-      const msg = buildWhatsAppMsg();
-      window.open(`https://wa.me/541159478705?text=${encodeURIComponent(msg)}`, "_blank", "noopener,noreferrer");
-      closeViandaModal();
-    });
-  }
+  viandaConfirmarBtn.addEventListener("click", () => {
+    const msg = buildWhatsAppMsg();
+    window.open(`https://wa.me/541159478705?text=${encodeURIComponent(msg)}`, "_blank", "noopener,noreferrer");
+    closeViandaModal();
+  });
 }
 
 document.querySelectorAll(".btn-cotizar-catering").forEach((button) => {

@@ -253,31 +253,21 @@
     <div class="vianda-modal">
       <button class="vianda-modal-close" type="button" aria-label="Cerrar">&#x2715;</button>
 
-      <!-- Indicador de pasos -->
-      <div class="vianda-steps" aria-hidden="true">
-        <div class="vianda-step is-active" data-step-indicator="1">
-          <span class="vianda-step-num">1</span>
-          <span class="vianda-step-label">Cantidad</span>
-        </div>
-        <div class="vianda-step-line"></div>
-        <div class="vianda-step" data-step-indicator="2">
-          <span class="vianda-step-num">2</span>
-          <span class="vianda-step-label">Sabores</span>
-        </div>
+      <div class="vianda-modal-header">
+        <h2 id="viandaModalTitle">Armá tu semana</h2>
+        <p class="vianda-modal-sub">Sumá las viandas por línea. Mínimo 5 en total. Podés detallar por sabor o pedir sin especificar.</p>
       </div>
 
-      <!-- Paso 1: Cantidades -->
-      <div class="vianda-step-panel" id="viandaStep1">
-        <div class="vianda-modal-header">
-          <h2 id="viandaModalTitle">Armá tu semana</h2>
-          <p class="vianda-modal-sub">Sumá las viandas que necesitás de cada línea. Mínimo 5 en total.</p>
-        </div>
+      <div class="vianda-qty-list">
 
-        <div class="vianda-qty-list">
-          <div class="vianda-qty-row" data-tipo="premium">
+        <div class="vianda-category-block" data-tipo="premium">
+          <div class="vianda-qty-row">
             <div class="vianda-qty-info">
               <strong>Especiales</strong>
               <span>Platos elaborados, proteínas nobles</span>
+              <button class="vianda-expand-btn" type="button" aria-expanded="false" aria-controls="expand-premium">
+                &#x25BE; elegir por sabor
+              </button>
             </div>
             <div class="vianda-qty-controls">
               <button class="vianda-qty-btn" type="button" data-action="minus" aria-label="Restar Especiales">&#x2212;</button>
@@ -285,11 +275,17 @@
               <button class="vianda-qty-btn" type="button" data-action="plus" aria-label="Sumar Especiales">&#x2B;</button>
             </div>
           </div>
+          <div class="vianda-expand-panel" id="expand-premium" hidden></div>
+        </div>
 
-          <div class="vianda-qty-row" data-tipo="light">
+        <div class="vianda-category-block" data-tipo="light">
+          <div class="vianda-qty-row">
             <div class="vianda-qty-info">
               <strong>Light</strong>
               <span>Bajas en calorías, alta nutrición</span>
+              <button class="vianda-expand-btn" type="button" aria-expanded="false" aria-controls="expand-light">
+                &#x25BE; elegir por sabor
+              </button>
             </div>
             <div class="vianda-qty-controls">
               <button class="vianda-qty-btn" type="button" data-action="minus" aria-label="Restar Light">&#x2212;</button>
@@ -297,11 +293,17 @@
               <button class="vianda-qty-btn" type="button" data-action="plus" aria-label="Sumar Light">&#x2B;</button>
             </div>
           </div>
+          <div class="vianda-expand-panel" id="expand-light" hidden></div>
+        </div>
 
-          <div class="vianda-qty-row" data-tipo="classic">
+        <div class="vianda-category-block" data-tipo="classic">
+          <div class="vianda-qty-row">
             <div class="vianda-qty-info">
               <strong>Classic</strong>
               <span>Los clásicos de siempre</span>
+              <button class="vianda-expand-btn" type="button" aria-expanded="false" aria-controls="expand-classic">
+                &#x25BE; elegir por sabor
+              </button>
             </div>
             <div class="vianda-qty-controls">
               <button class="vianda-qty-btn" type="button" data-action="minus" aria-label="Restar Classic">&#x2212;</button>
@@ -309,33 +311,20 @@
               <button class="vianda-qty-btn" type="button" data-action="plus" aria-label="Sumar Classic">&#x2B;</button>
             </div>
           </div>
+          <div class="vianda-expand-panel" id="expand-classic" hidden></div>
         </div>
 
-        <div class="vianda-modal-footer">
-          <div class="vianda-total-row">
-            <span>Total</span>
-            <strong class="vianda-total-value">0 viandas</strong>
-          </div>
-          <p class="vianda-min-note" id="viandaMinNote">Faltan al menos 5 viandas para confirmar el pedido.</p>
-          <button class="btn btn-vianda-continuar" type="button" id="viandaContinuar" disabled>
-            Elegir sabores &#x2192;
-          </button>
-        </div>
       </div>
 
-      <!-- Paso 2: Sabores -->
-      <div class="vianda-step-panel" id="viandaStep2" hidden>
-        <div class="vianda-modal-header">
-          <h2>Elegí tus sabores</h2>
-          <p class="vianda-modal-sub">Opcional. Marcá los platos que preferís para la semana — si no elegís, lo coordinamos por WhatsApp.</p>
+      <div class="vianda-modal-footer">
+        <div class="vianda-total-row">
+          <span>Total</span>
+          <strong class="vianda-total-value">0 viandas</strong>
         </div>
-        <div class="vianda-sabores-list" id="viandaSaboresList"></div>
-        <div class="vianda-modal-footer vianda-footer-row">
-          <button class="btn btn-vianda-volver" type="button" id="viandaVolver">&#x2190; Volver</button>
-          <button class="btn btn-vianda-confirmar" type="button" id="viandaConfirmar">
-            Enviar por WhatsApp
-          </button>
-        </div>
+        <p class="vianda-min-note" id="viandaMinNote">Faltan al menos 5 viandas para confirmar el pedido.</p>
+        <button class="btn btn-vianda-confirmar" type="button" id="viandaConfirmar" disabled>
+          Enviar pedido por WhatsApp
+        </button>
       </div>
     </div>
   </div>
