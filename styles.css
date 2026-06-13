@@ -994,7 +994,11 @@ li {
 
 .vianda-modal {
   position: relative;
-  width: min(480px, 100%);
+  width: min(500px, 100%);
+  max-height: 92vh;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,248,239,0.15) transparent;
   background: linear-gradient(160deg, #1e1c1a 0%, #272320 100%);
   border: 1px solid rgba(255, 248, 239, 0.1);
   border-radius: 10px;
@@ -1170,34 +1174,229 @@ li {
   pointer-events: none;
 }
 
-.btn-vianda-confirmar {
+/* Indicador de pasos */
+.vianda-steps {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-bottom: 1.6rem;
+}
+
+.vianda-step {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  opacity: 0.38;
+  transition: opacity 0.25s ease;
+}
+
+.vianda-step.is-active {
+  opacity: 1;
+}
+
+.vianda-step-num {
+  width: 1.6rem;
+  height: 1.6rem;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(255, 248, 239, 0.1);
+  color: rgba(255, 248, 239, 0.6);
+  font-size: 0.75rem;
+  font-weight: 800;
+  flex-shrink: 0;
+  transition: background 0.25s ease, color 0.25s ease;
+}
+
+.vianda-step.is-active .vianda-step-num {
+  background: var(--green);
+  color: #fff;
+}
+
+.vianda-step-label {
+  color: rgba(255, 248, 239, 0.72);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.vianda-step.is-active .vianda-step-label {
+  color: var(--cream);
+}
+
+.vianda-step-line {
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 248, 239, 0.12);
+  margin: 0 0.75rem;
+}
+
+/* Paneles de paso */
+.vianda-step-panel[hidden] {
+  display: none;
+}
+
+/* Botón Continuar (paso 1) */
+.btn-vianda-continuar {
   width: 100%;
   min-height: 3.2rem;
-  background: linear-gradient(135deg, var(--green), #1e8024);
+  background: linear-gradient(135deg, var(--orange), #c96318);
   color: #fff;
   font-size: 1rem;
   font-weight: 700;
   border-radius: 6px;
   letter-spacing: 0.02em;
-  box-shadow: 0 8px 24px rgba(30, 128, 36, 0.32);
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  box-shadow: 0 8px 24px rgba(200, 99, 24, 0.32);
+  transition: opacity 0.2s ease, transform 0.2s ease, filter 0.2s ease;
 }
 
-.btn-vianda-confirmar:disabled {
-  opacity: 0.38;
+.btn-vianda-continuar:disabled {
+  opacity: 0.32;
   cursor: not-allowed;
-  transform: none;
   box-shadow: none;
 }
 
-.btn-vianda-confirmar:not(:disabled):hover {
+.btn-vianda-continuar:not(:disabled):hover {
   transform: translateY(-2px);
   filter: brightness(1.06);
 }
 
+/* Footer de 2 botones (paso 2) */
+.vianda-footer-row {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+/* Botón Volver */
+.btn-vianda-volver {
+  min-height: 3.2rem;
+  padding: 0.9rem 1.2rem;
+  background: rgba(255, 248, 239, 0.07);
+  border: 1px solid rgba(255, 248, 239, 0.14);
+  color: rgba(255, 248, 239, 0.78);
+  font-size: 0.92rem;
+  font-weight: 700;
+  border-radius: 6px;
+  white-space: nowrap;
+  transition: background 0.18s ease, color 0.18s ease;
+}
+
+.btn-vianda-volver:hover {
+  background: rgba(255, 248, 239, 0.12);
+  color: var(--cream);
+}
+
+/* Botón Confirmar (paso 2) */
+.btn-vianda-confirmar {
+  min-height: 3.2rem;
+  background: linear-gradient(135deg, var(--green), #1e8024);
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 700;
+  border-radius: 6px;
+  letter-spacing: 0.02em;
+  box-shadow: 0 8px 24px rgba(30, 128, 36, 0.32);
+  transition: opacity 0.2s ease, transform 0.2s ease, filter 0.2s ease;
+}
+
+.btn-vianda-confirmar:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.06);
+}
+
+/* Lista de sabores (paso 2) */
+.vianda-sabores-list {
+  display: grid;
+  gap: 1rem;
+  margin-bottom: 1.4rem;
+}
+
+.vianda-sabores-section {
+  border: 1px solid rgba(255, 248, 239, 0.08);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.vianda-sabores-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.65rem 1rem;
+  background: rgba(255, 248, 239, 0.05);
+  border-bottom: 1px solid rgba(255, 248, 239, 0.08);
+}
+
+.vianda-sabores-header strong {
+  color: var(--cream);
+  font-size: 0.92rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.vianda-sabores-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--orange-soft);
+  background: rgba(246, 139, 53, 0.12);
+  border-radius: 999px;
+  padding: 0.2rem 0.6rem;
+  letter-spacing: 0.04em;
+}
+
+.vianda-sabores-items {
+  padding: 0.4rem 0.5rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.1rem;
+}
+
+.vianda-sabor-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.52rem 0.6rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  color: rgba(255, 248, 239, 0.78);
+  font-size: 0.82rem;
+  line-height: 1.3;
+  user-select: none;
+}
+
+.vianda-sabor-item:hover {
+  background: rgba(255, 248, 239, 0.06);
+  color: var(--cream);
+}
+
+.vianda-sabor-item input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 1.1rem;
+  height: 1.1rem;
+  border: 2px solid rgba(255, 248, 239, 0.28);
+  border-radius: 3px;
+  flex-shrink: 0;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 70%;
+}
+
+.vianda-sabor-item input[type="checkbox"]:checked {
+  background-color: var(--green);
+  border-color: var(--green);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2 6l3 3 5-5' stroke='white' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+
 @media (max-width: 768px) {
   .vianda-modal {
-    padding: 1.6rem 1.3rem 1.5rem;
+    padding: 1.5rem 1.2rem 1.4rem;
+    max-height: 96vh;
   }
 
   .vianda-modal-header h2 {
@@ -1206,6 +1405,20 @@ li {
 
   .vianda-qty-row {
     padding: 0.75rem 0.9rem;
+  }
+
+  .vianda-sabores-items {
+    grid-template-columns: 1fr;
+  }
+
+  .vianda-footer-row {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .btn-vianda-volver,
+  .btn-vianda-confirmar {
+    font-size: 0.84rem;
+    padding: 0.8rem 0.8rem;
   }
 }
 
