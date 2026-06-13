@@ -131,7 +131,8 @@ button {
 }
 
 .brand-copy span {
-  font-size: 0.72rem;
+  font-size: 0.82rem;
+  font-weight: 700;
   color: var(--muted);
   letter-spacing: 0.16em;
 }
@@ -637,6 +638,42 @@ li {
   background: transparent;
 }
 
+.vianda-slide-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 3;
+  padding: 2.5rem 1.2rem 1.4rem;
+  background: linear-gradient(0deg, rgba(20, 18, 16, 0.78) 0%, transparent 100%);
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+  transition: opacity 0.42s ease;
+}
+
+.vianda-slide.is-active .vianda-slide-overlay {
+  pointer-events: auto;
+}
+
+.vianda-slide.is-prev .vianda-slide-overlay,
+.vianda-slide.is-next .vianda-slide-overlay,
+.vianda-slide.is-hidden .vianda-slide-overlay {
+  opacity: 0;
+}
+
+.btn-vianda-wa {
+  background: linear-gradient(135deg, var(--green), #1e8024);
+  color: #ffffff;
+  font-size: 0.9rem;
+  font-weight: 700;
+  padding: 0.85rem 1.5rem;
+  border-radius: 4px;
+  white-space: nowrap;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.36);
+  letter-spacing: 0.02em;
+}
+
 .vianda-slide.is-active {
   z-index: 4;
   opacity: 1;
@@ -752,6 +789,12 @@ li {
   border-radius: var(--radius-lg);
   padding: 1.2rem;
   box-shadow: var(--shadow-dark);
+  display: flex;
+  flex-direction: column;
+}
+
+.catering-card .btn-catering {
+  margin-top: auto;
 }
 
 .catering-card p {
@@ -1129,7 +1172,8 @@ li {
 
   .brand-copy span {
     max-width: 13rem;
-    font-size: 0.62rem;
+    font-size: 0.68rem;
+    font-weight: 700;
     line-height: 1.2;
   }
 
@@ -1350,6 +1394,15 @@ li {
     flex: 1 1 30%;
     padding: 0.7rem 0.55rem;
     font-size: 0.8rem;
+  }
+
+  .vianda-slide-overlay {
+    padding: 2rem 0.9rem 1.1rem;
+  }
+
+  .btn-vianda-wa {
+    font-size: 0.82rem;
+    padding: 0.72rem 1.1rem;
   }
 
   .catering-grid {
