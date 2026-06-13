@@ -1174,6 +1174,7 @@ li {
   font-size: 1.2rem;
   font-weight: 700;
   line-height: 1;
+  touch-action: manipulation;
   transition: background 0.16s ease, transform 0.14s ease;
 }
 
@@ -1214,6 +1215,7 @@ li {
   font-size: 0.95rem;
   font-weight: 700;
   line-height: 1;
+  touch-action: manipulation;
   transition: background 0.14s ease;
 }
 
